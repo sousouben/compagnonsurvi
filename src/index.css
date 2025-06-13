@@ -1,0 +1,176 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+:root {
+  --background-rgb: 244, 241, 238; /* #F4F1EE */
+  --foreground-rgb: 45, 45, 45; /* #2D2D2D */
+  --card-rgb: 237, 228, 217; /* #EDE4D9 */
+  --primary-rgb: 94, 80, 63; /* #5E503F */
+  --primary-foreground-rgb: 237, 237, 237; /* #EDEDED */
+  --secondary-rgb: 237, 228, 217; /* #EDE4D9 */
+  --secondary-foreground-rgb: 45, 45, 45; /* #2D2D2D */
+  --accent-rgb: 76, 107, 55; /* #4C6B37 */
+  --accent-foreground-rgb: 237, 237, 237; /* #EDEDED */
+  --destructive-rgb: 139, 0, 0; /* #8B0000 */
+  --destructive-foreground-rgb: 237, 237, 237; /* #EDEDED */
+  --border-rgb: 204, 204, 204; /* #CCCCCC */
+  --input-rgb: 204, 204, 204; /* #CCCCCC */
+  --ring-rgb: 76, 107, 55; /* #4C6B37 */
+  
+  --background: var(--background-rgb);
+  --foreground: var(--foreground-rgb);
+  --card: var(--card-rgb);
+  --card-foreground: var(--foreground-rgb);
+  --popover: var(--card-rgb);
+  --popover-foreground: var(--foreground-rgb);
+  --primary: var(--primary-rgb);
+  --primary-foreground: var(--primary-foreground-rgb);
+  --secondary: var(--secondary-rgb);
+  --secondary-foreground: var(--secondary-foreground-rgb);
+  --muted: 230, 230, 230; /* Lighter gray for muted */
+  --muted-foreground: 100, 100, 100; /* Darker gray for muted text */
+  --accent: var(--accent-rgb);
+  --accent-foreground: var(--accent-foreground-rgb);
+  --destructive: var(--destructive-rgb);
+  --destructive-foreground: var(--destructive-foreground-rgb);
+  --border: var(--border-rgb);
+  --input: var(--input-rgb);
+  --ring: var(--ring-rgb);
+  --radius: 0.5rem;
+
+  --sos-flash-on-bg: white;
+  --sos-flash-off-bg: red;
+}
+ 
+.dark {
+  --background-rgb: 30, 30, 30; /* #1E1E1E */
+  --foreground-rgb: 237, 237, 237; /* #EDEDED */
+  --card-rgb: 42, 42, 42; /* #2A2A2A */
+  --primary-rgb: 210, 180, 140; /* #D2B48C */
+  --primary-foreground-rgb: 30, 30, 30; /* #1E1E1E */
+  --secondary-rgb: 42, 42, 42; /* #2A2A2A */
+  --secondary-foreground-rgb: 237, 237, 237; /* #EDEDED */
+  --accent-rgb: 163, 193, 124; /* #A3C17C */
+  --accent-foreground-rgb: 30, 30, 30; /* #1E1E1E */
+  --destructive-rgb: 255, 76, 76; /* #FF4C4C */
+  --destructive-foreground-rgb: 30, 30, 30; /* #1E1E1E */
+  --border-rgb: 68, 68, 68; /* #444444 */
+  --input-rgb: 68, 68, 68; /* #444444 */
+  --ring-rgb: 163, 193, 124; /* #A3C17C */
+
+  --sos-flash-on-bg: #FF4C4C;
+  --sos-flash-off-bg: #1E1E1E;
+}
+
+* {
+  border-color: rgb(var(--border));
+}
+
+body {
+  background-color: rgb(var(--background));
+  color: rgb(var(--foreground));
+  font-family: 'Inter', sans-serif;
+  font-feature-settings: "rlig" 1, "calt" 1;
+  min-height: 100vh;
+  transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+}
+
+.dark body, body.dark {
+   background-color: rgb(var(--background));
+}
+
+body:not(.dark) {
+  background-color: rgb(var(--background));
+}
+
+.survival-gradient {
+  background: linear-gradient(135deg, rgb(var(--accent)) 0%, color-mix(in srgb, rgb(var(--accent)) 80%, black) 100%);
+}
+
+.danger-gradient {
+  background: linear-gradient(135deg, rgb(var(--destructive)) 0%, color-mix(in srgb, rgb(var(--destructive)) 80%, black) 100%);
+}
+
+.warning-gradient {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 50%, #b45309 100%);
+}
+
+.glass-effect {
+  background-color: color-mix(in srgb, rgb(var(--card)) 70%, transparent);
+  backdrop-filter: blur(10px) saturate(120%);
+  border: 1px solid color-mix(in srgb, rgb(var(--border)) 50%, transparent);
+  box-shadow: 0 4px 12px 0 color-mix(in srgb, rgb(var(--foreground)) 10%, transparent);
+}
+
+.dark .glass-effect {
+  background-color: color-mix(in srgb, rgb(var(--card)) 60%, transparent);
+  border: 1px solid color-mix(in srgb, rgb(var(--border)) 70%, transparent);
+}
+
+
+.survival-pattern {
+  background-image: 
+    radial-gradient(circle at 25% 25%, color-mix(in srgb, rgb(var(--accent)) 10%, transparent) 0%, transparent 50%),
+    radial-gradient(circle at 75% 75%, color-mix(in srgb, rgb(var(--accent)) 5%, transparent) 0%, transparent 50%);
+}
+
+.sos-pulse {
+  animation: sos-blink-off 1.5s infinite;
+}
+
+@keyframes sos-blink-off {
+  0%, 100% { background-color: rgb(var(--destructive)); opacity: 1; }
+  50% { background-color: transparent; opacity: 0.8; }
+}
+
+.sos-flash-active {
+  animation: sos-flash-screen 0.5s infinite alternate;
+}
+
+@keyframes sos-flash-screen {
+  from { background-color: var(--sos-flash-on-bg); }
+  to { background-color: var(--sos-flash-off-bg); }
+}
+
+
+.energy-save {
+  filter: brightness(0.3) contrast(1.2);
+}
+
+.leaflet-container {
+  background: rgb(var(--card)) !important;
+}
+
+.leaflet-tile {
+  filter: brightness(0.8) contrast(1.1) saturate(0.8);
+}
+.dark .leaflet-tile {
+  filter: brightness(0.6) contrast(1.2) saturate(0.7) invert(1) hue-rotate(180deg);
+}
+
+
+@media (max-width: 768px) {
+  .mobile-optimized {
+    font-size: 0.9rem;
+    padding: 0.75rem;
+  }
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgb(var(--background));
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgb(var(--primary));
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in srgb, rgb(var(--primary)) 80%, black);
+}
