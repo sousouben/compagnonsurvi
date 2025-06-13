@@ -5,8 +5,8 @@
   "description": "Votre compagnon de survie ultime",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#1a1a1a",
-  "theme_color": "#22c55e",
+  "background_color": "#0f6660",
+  "theme_color": "#0f6660",
   "orientation": "portrait",
   "icons": [
     {

@@ -209,8 +209,8 @@ export default defineConfig({
         short_name: "Survie",
         start_url: "/",
         display: "standalone",
-        background_color: "#000000",
-        theme_color: "#10b981",
+        background_color: "#0f6660",
+        theme_color: "#0f6660",
         icons: [
           {
             src: "/icons/icon-192x192.png",
