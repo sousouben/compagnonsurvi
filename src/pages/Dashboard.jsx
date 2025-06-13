@@ -90,7 +90,7 @@ const Dashboard = () => {
           animate={{ opacity: 1, y: 0 }}
           className="text-3xl font-bold text-foreground mb-2"
         >
-          Survivor Companion
+          compagnon de survie
         </motion.h1>
         <p className="text-muted-foreground">Votre guide de survie ultime</p>
       </div>

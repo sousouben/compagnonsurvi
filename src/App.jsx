@@ -1,16 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Toaster } from '@/components/ui/toaster';
-import Navigation from '@/components/Navigation';
-import Dashboard from '@/pages/Dashboard';
-import SurvivalKit from '@/pages/SurvivalKit';
-import Techniques from '@/pages/Techniques';
-import PlantMap from '@/pages/PlantMap';
-import Quiz from '@/pages/Quiz';
-import SOS from '@/pages/SOS';
+import React, { useState, useEffect } from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
+import { Toaster } from "@/components/ui/toaster";
+import Navigation from "@/components/Navigation";
+import Dashboard from "@/pages/Dashboard";
+import SurvivalKit from "@/pages/SurvivalKit";
+import Techniques from "@/pages/Techniques";
+import PlantMap from "@/pages/PlantMap";
+import Quiz from "@/pages/Quiz";
+import SOS from "@/pages/SOS";
 // import PreparationPage from '@/pages/Preparation'; // Removed
-import { ThemeProvider } from '@/contexts/ThemeContext';
+import { ThemeProvider } from "@/contexts/ThemeContext";
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -37,8 +37,12 @@ function App() {
             transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
             className="w-16 h-16 mx-auto mb-4 rounded-full border-4 border-green-500 border-t-transparent"
           />
-          <h1 className="text-2xl font-bold text-white mb-2">Survivor Companion</h1>
-          <p className="text-gray-400">Chargement de votre guide de survie...</p>
+          <h1 className="text-2xl font-bold text-white mb-2">
+            compagnon de survie
+          </h1>
+          <p className="text-gray-400">
+            Chargement de votre guide de survie...
+          </p>
         </motion.div>
       </div>
     );
