@@ -1,13 +1,18 @@
-import path from 'node:path';
-import react from '@vitejs/plugin-react';
-import { createLogger, defineConfig } from 'vite';
+import path from "node:path";
+import react from "@vitejs/plugin-react";
+import { createLogger, defineConfig } from "vite";
+import { VitePWA } from "vite-plugin-pwa";
 
-const isDev = process.env.NODE_ENV !== 'production';
+const isDev = process.env.NODE_ENV !== "production";
 let inlineEditPlugin, editModeDevPlugin;
 
 if (isDev) {
-	inlineEditPlugin = (await import('./plugins/visual-editor/vite-plugin-react-inline-editor.js')).default;
-	editModeDevPlugin = (await import('./plugins/visual-editor/vite-plugin-edit-mode.js')).default;
+  inlineEditPlugin = (
+    await import("./plugins/visual-editor/vite-plugin-react-inline-editor.js")
+  ).default;
+  editModeDevPlugin = (
+    await import("./plugins/visual-editor/vite-plugin-edit-mode.js")
+  ).default;
 }
 
 const configHorizonsViteErrorHandler = `
@@ -108,7 +113,6 @@ const originalFetch = window.fetch;
 window.fetch = function(...args) {
 	const url = args[0] instanceof Request ? args[0].url : args[0];
 
-	// Skip WebSocket URLs
 	if (url.startsWith('ws:') || url.startsWith('wss:')) {
 		return originalFetch.apply(this, args);
 	}
@@ -116,23 +120,21 @@ window.fetch = function(...args) {
 	return originalFetch.apply(this, args)
 		.then(async response => {
 			const contentType = response.headers.get('Content-Type') || '';
-
-			// Exclude HTML document responses
 			const isDocumentResponse =
 				contentType.includes('text/html') ||
 				contentType.includes('application/xhtml+xml');
 
 			if (!response.ok && !isDocumentResponse) {
-					const responseClone = response.clone();
-					const errorFromRes = await responseClone.text();
-					const requestUrl = response.url;
-					console.error(\`Fetch error from \${requestUrl}: \${errorFromRes}\`);
+				const responseClone = response.clone();
+				const errorFromRes = await responseClone.text();
+				const requestUrl = response.url;
+				console.error(\`Fetch error from \${requestUrl}: \${errorFromRes}\`);
 			}
 
 			return response;
 		})
 		.catch(error => {
-			if (!url.match(/\.html?$/i)) {
+			if (!url.match(/\\.html?$/i)) {
 				console.error(error);
 			}
 
@@ -142,81 +144,116 @@ window.fetch = function(...args) {
 `;
 
 const addTransformIndexHtml = {
-	name: 'add-transform-index-html',
-	transformIndexHtml(html) {
-		return {
-			html,
-			tags: [
-				{
-					tag: 'script',
-					attrs: { type: 'module' },
-					children: configHorizonsRuntimeErrorHandler,
-					injectTo: 'head',
-				},
-				{
-					tag: 'script',
-					attrs: { type: 'module' },
-					children: configHorizonsViteErrorHandler,
-					injectTo: 'head',
-				},
-				{
-					tag: 'script',
-					attrs: {type: 'module'},
-					children: configHorizonsConsoleErrroHandler,
-					injectTo: 'head',
-				},
-				{
-					tag: 'script',
-					attrs: { type: 'module' },
-					children: configWindowFetchMonkeyPatch,
-					injectTo: 'head',
-				},
-			],
-		};
-	},
+  name: "add-transform-index-html",
+  transformIndexHtml(html) {
+    return {
+      html,
+      tags: [
+        {
+          tag: "script",
+          attrs: { type: "module" },
+          children: configHorizonsRuntimeErrorHandler,
+          injectTo: "head",
+        },
+        {
+          tag: "script",
+          attrs: { type: "module" },
+          children: configHorizonsViteErrorHandler,
+          injectTo: "head",
+        },
+        {
+          tag: "script",
+          attrs: { type: "module" },
+          children: configHorizonsConsoleErrroHandler,
+          injectTo: "head",
+        },
+        {
+          tag: "script",
+          attrs: { type: "module" },
+          children: configWindowFetchMonkeyPatch,
+          injectTo: "head",
+        },
+      ],
+    };
+  },
 };
 
 console.warn = () => {};
 
-const logger = createLogger()
-const loggerError = logger.error
+const logger = createLogger();
+const loggerError = logger.error;
 
 logger.error = (msg, options) => {
-	if (options?.error?.toString().includes('CssSyntaxError: [postcss]')) {
-		return;
-	}
+  if (options?.error?.toString().includes("CssSyntaxError: [postcss]")) {
+    return;
+  }
 
-	loggerError(msg, options);
-}
+  loggerError(msg, options);
+};
 
 export default defineConfig({
-	customLogger: logger,
-	plugins: [
-		...(isDev ? [inlineEditPlugin(), editModeDevPlugin()] : []),
-		react(),
-		addTransformIndexHtml
-	],
-	server: {
-		cors: true,
-		headers: {
-			'Cross-Origin-Embedder-Policy': 'credentialless',
-		},
-		allowedHosts: true,
-	},
-	resolve: {
-		extensions: ['.jsx', '.js', '.tsx', '.ts', '.json', ],
-		alias: {
-			'@': path.resolve(__dirname, './src'),
-		},
-	},
-	build: {
-		rollupOptions: {
-			external: [
-				'@babel/parser',
-				'@babel/traverse',
-				'@babel/generator',
-				'@babel/types'
-			]
-		}
-	}
+  customLogger: logger,
+  plugins: [
+    ...(isDev ? [inlineEditPlugin(), editModeDevPlugin()] : []),
+    react(),
+    VitePWA({
+      registerType: "autoUpdate",
+      injectRegister: "auto",
+      includeAssets: [
+        "icons/icon-192x192.png",
+        "icons/icon-512x512.png",
+        "favicon.svg",
+      ],
+      manifest: {
+        name: "Compagnon de Survie",
+        short_name: "Survie",
+        start_url: "/",
+        display: "standalone",
+        background_color: "#000000",
+        theme_color: "#10b981",
+        icons: [
+          {
+            src: "/icons/icon-192x192.png",
+            sizes: "192x192",
+            type: "image/png",
+          },
+          {
+            src: "/icons/icon-512x512.png",
+            sizes: "512x512",
+            type: "image/png",
+          },
+          {
+            src: "/survival-icon.png",
+            sizes: "any",
+            type: "image/png",
+            purpose: "any maskable",
+          },
+        ],
+      },
+    }),
+    addTransformIndexHtml,
+  ],
+  server: {
+    cors: true,
+    headers: {
+      "Cross-Origin-Embedder-Policy": "credentialless",
+    },
+    allowedHosts: true,
+  },
+  resolve: {
+    extensions: [".jsx", ".js", ".tsx", ".ts", ".json"],
+    alias: {
+      "@": path.resolve(__dirname, "./src"),
+    },
+  },
+  build: {
+    rollupOptions: {
+      external: [
+        "@babel/parser",
+        "@babel/traverse",
+        "@babel/generator",
+        "@babel/types",
+      ],
+    },
+  },
 });
